@@ -40,6 +40,16 @@
   margin: 20px;
 }
 
+.draggable {
+    width: 100px;
+    height: 100px;
+    background-size: cover;
+    background-position: center;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    cursor: grab;
+}
+
 div.container {
   border: 5px solid #555;
 }
