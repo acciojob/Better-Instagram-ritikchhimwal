@@ -1,37 +1,38 @@
-// Select all draggable elements
-const draggables = document.querySelectorAll(".draggable");
+const images = document.querySelectorAll("img");
 
-let draggedElement = null;
-
-// Add drag event listeners
-draggables.forEach(draggable => {
-    draggable.addEventListener("dragstart", handleDragStart);
-    draggable.addEventListener("dragover", handleDragOver);
-    draggable.addEventListener("drop", handleDrop);
+images.forEach(img => {
+    img.addEventListener("dragstart", dragStart);
+    img.addEventListener("dragover", dragOver);
+    img.addEventListener("drop", drop);
+    img.addEventListener("dragenter", preventDefault);
+    img.addEventListener("dragleave", preventDefault);
 });
 
-// Handle the start of a drag event
-function handleDragStart(event) {
-    draggedElement = event.target; // Set the current element as dragged
-    event.dataTransfer.effectAllowed = "move";
+let dragSource = null;
+
+function dragStart(e) {
+    dragSource = this;
+    e.dataTransfer.setData("text/plain", this.id);
 }
 
-// Allow dropping by preventing default behavior of dragover event
-function handleDragOver(event) {
-    event.preventDefault();
+function dragOver(e) {
+    e.preventDefault();
 }
 
-// Handle the drop event to swap images
-function handleDrop(event) {
-    event.preventDefault();
+function drop(e) {
+    e.preventDefault();
+    const dragTarget = this;
 
-    // If dropping on another element, swap their background images
-    if (draggedElement && draggedElement !== event.target) {
-        const tempImage = draggedElement.style.backgroundImage;
-        draggedElement.style.backgroundImage = event.target.style.backgroundImage;
-        event.target.style.backgroundImage = tempImage;
+    if (dragSource && dragSource !== dragTarget) {
+        // Swap images
+        const sourceParent = dragSource.parentNode;
+        const targetParent = dragTarget.parentNode;
+
+        targetParent.replaceChild(dragSource, dragTarget);
+        sourceParent.appendChild(dragTarget);
     }
+}
 
-    // Clear the dragged element after drop
-    draggedElement = null;
+function preventDefault(e) {
+    e.preventDefault();
 }
